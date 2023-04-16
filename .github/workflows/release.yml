@@ -2,7 +2,7 @@ name: Merge release to master
 on:
   push:
     branches:
-      - 'mastered'
+      - 'master'
 jobs:
   web-deploy:
     name: 🎉 Deploy
@@ -14,6 +14,6 @@ jobs:
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
-        server: ftp.samkirkland.com
-        username: myFtpUserName
-        password: ${{ secrets.ftp_password }}
+        server: ftp.isaachatilima.com
+        username: chikolo
+        password: ${{ secrets.FTP_PASSWORD }}
