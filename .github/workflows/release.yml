@@ -1,4 +1,4 @@
-name: Merge release to master
+name: Deploy To Production
 on:
   push:
     branches:
