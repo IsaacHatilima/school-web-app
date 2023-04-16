@@ -20,3 +20,10 @@ class RequestPasswordResetView(View):
 
     def get(self, request):
         return render(request, self.template_name)
+
+
+class SetPasswordResetView(View):
+    template_name = 'auth/setPassword.html'
+
+    def get(self, request):
+        return render(request, self.template_name)
