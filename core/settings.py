@@ -125,7 +125,7 @@ STATICFILES_DIRS = [
 if DEBUG:
     STATIC_ROOT = 'staticfiles'
 else:
-    STATIC_ROOT = os.path.join('/home/isaachatilima/liaz.org.zm/static')
+    STATIC_ROOT = os.path.join('/home/isaachatilima/demo.isaachatilima.com/static')
 
 MEDIA_URL = '/media/'
 if DEBUG:
