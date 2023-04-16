@@ -15,5 +15,5 @@ jobs:
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
         server: ftp.isaachatilima.com
-        username: chikolo
+        username: chikolo@isaachatilima.com
         password: ${{ secrets.FTP_PASSWORD }}
