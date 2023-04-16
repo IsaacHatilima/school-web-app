@@ -13,3 +13,10 @@ class LoginView(View):
         #         return HttpResponseRedirect(reverse('admin_home'))
         # else:
         #     return render(request, self.template_name)
+
+
+class RequestPasswordResetView(View):
+    template_name = 'auth/forgotPassword.html'
+
+    def get(self, request):
+        return render(request, self.template_name)
