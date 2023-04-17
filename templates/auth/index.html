@@ -85,19 +85,9 @@
   <script src="{% static 'js/scripts/customizer.js' %}" type="text/javascript"></script>
   <script src="{% static 'js/scripts/forms/form-login-register.js' %}" type="text/javascript"></script>
   <script>
-      function ShowHideDiv(btnPassport) {
-        var loginDIV = document.getElementById("login");
-        var TwofaDIV = document.getElementById("2fa");
-        loginDIV.style.display = "none";
-        TwofaDIV.style.display = "block";
-        // if (btnPassport.value == "Yes") {
-          
-        //   btnPassport.value = "No";
-        // } else {
-          
-        //   btnPassport.value = "Yes";
-        // }
-      }
+    function ShowHideDiv(btnPassport) {
+      location.href="{% url 'auth_two_fa' %}";
+    }
   </script>
 </body>
 </html>

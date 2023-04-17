@@ -21,6 +21,7 @@ class LoginView(View):
 
     def get(self, request):
         return render(request, self.template_name)
+
         # if request.user.is_authenticated:
         #     if request.user.role == 'System Admin':
         #         return HttpResponseRedirect(reverse('admin_home'))
@@ -30,33 +31,25 @@ class LoginView(View):
     def post(self, request, format=None):
         username_email = escape(strip_tags(request.POST.get('email', '')))
         if '@' in username_email:
-            email = username_email
+            validUser = User.objects.get(email=username_email)
         else:
             validUser = User.objects.get(username=username_email)
-            email = validUser.email
         password = escape(strip_tags(request.POST.get('password', '')))
-        user = authenticate(email=email, password=password)
-        if user:
-            if user.is_active:
-                if user.is_verified:
-                    auth_login(request, user)
-                    remember = escape(strip_tags(
-                        request.POST.get('remember_me', '')))
-                    if remember:
-                        settings.SESSION_EXPIRE_AT_BROWSER_CLOSE = False
-                    else:
-                        settings.SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-                    data = {
-                        'status': status.HTTP_200_OK,
-                        'msg': 'Login Successful.',
-                        'role': user.role,
-                    }
-                else:
-                    data = {'status': status.HTTP_401_UNAUTHORIZED,
-                            'msg': 'Your account is not verified.'}
+        if validUser.check_password(password):
+            remember = escape(strip_tags(
+                request.POST.get('remember_me', '')))
+            if remember:
+                request.session['remember_me'] = request.POST.get(
+                    'remember_me', '')
             else:
-                data = {'status': status.HTTP_401_UNAUTHORIZED,
-                        'msg': 'Your account has been disabled.'}
+                request.session['remember_me'] = request.POST.get(
+                    'remember_me', '')
+
+            # Send 2FA Code
+            data = {
+                'status': status.HTTP_200_OK,
+                'msg': '2FA Code Sent.',
+            }
         else:
             data = {'status': status.HTTP_403_FORBIDDEN,
                     'msg': 'Invalid Email or Password.'}
@@ -67,7 +60,50 @@ class TwoFAView(View):
     template_name = 'auth/twofa.html'
 
     def get(self, request):
-        return render(request, self.template_name)
+        remember_me = request.session.get('remember_me')
+        context = {"remember_me": remember_me}
+        return render(request, self.template_name, context)
+
+    def post(self, request, format=None):
+        username_email = escape(strip_tags(request.POST.get('email', '')))
+        if '@' in username_email:
+            email = username_email
+        else:
+            validUser = User.objects.get(username=username_email)
+            email = validUser.email
+        password = escape(strip_tags(request.POST.get('password', '')))
+        two_fa_code = escape(strip_tags(request.POST.get('two_fa_code', '')))
+        validUser = User.objects.get(login_code=two_fa_code)
+        if validUser:
+            user = authenticate(email=email, password=password)
+            if user:
+                if user.is_active:
+                    if user.is_verified:
+                        auth_login(request, user)
+                        # remember = escape(strip_tags(
+                        #     request.POST.get('remember_me', '')))
+                        # if remember:
+                        #     settings.SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+                        # else:
+                        #     settings.SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+                        data = {
+                            'status': status.HTTP_200_OK,
+                            'msg': 'Login Successful.',
+                            'role': user.role,
+                        }
+                    else:
+                        data = {'status': status.HTTP_401_UNAUTHORIZED,
+                                'msg': 'Your account is not verified.'}
+                else:
+                    data = {'status': status.HTTP_401_UNAUTHORIZED,
+                            'msg': 'Your account has been disabled.'}
+            else:
+                data = {'status': status.HTTP_403_FORBIDDEN,
+                        'msg': 'Invalid Email or Password.'}
+        else:
+            data = {'status': status.HTTP_403_FORBIDDEN,
+                    'msg': 'Invalid Code.'}
+        return HttpResponse(json.dumps(data))
 
 
 class RequestPasswordResetView(View):
