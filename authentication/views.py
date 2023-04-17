@@ -7,6 +7,7 @@ from django.conf import settings
 from rest_framework import status
 import json
 from django.urls import reverse
+from django.utils.crypto import get_random_string
 from .models import User
 
 
@@ -20,13 +21,11 @@ class LoginView(View):
     template_name = 'auth/index.html'
 
     def get(self, request):
-        return render(request, self.template_name)
-
-        # if request.user.is_authenticated:
-        #     if request.user.role == 'System Admin':
-        #         return HttpResponseRedirect(reverse('admin_home'))
-        # else:
-        #     return render(request, self.template_name)
+        if request.user.is_authenticated:
+            if request.user.role == 'System Admin':
+                return HttpResponseRedirect(reverse('admin_home'))
+        else:
+            return render(request, self.template_name)
 
     def post(self, request, format=None):
         username_email = escape(strip_tags(request.POST.get('email', '')))
@@ -36,20 +35,21 @@ class LoginView(View):
             validUser = User.objects.get(username=username_email)
         password = escape(strip_tags(request.POST.get('password', '')))
         if validUser.check_password(password):
-            remember = escape(strip_tags(
-                request.POST.get('remember_me', '')))
+            request.session['email'] = validUser.email
+            remember = request.POST.get('remember_me')
             if remember:
                 request.session['remember_me'] = request.POST.get(
                     'remember_me', '')
             else:
                 request.session['remember_me'] = request.POST.get(
                     'remember_me', '')
-
             # Send 2FA Code
-            data = {
-                'status': status.HTTP_200_OK,
-                'msg': '2FA Code Sent.',
-            }
+            two_fa = get_random_string(length=6)
+            validUser.two_fa = two_fa.upper()
+            validUser.save()
+            print(two_fa.upper())
+            data = {'status': status.HTTP_200_OK,
+                    'msg': 'Valid User.'}
         else:
             data = {'status': status.HTTP_403_FORBIDDEN,
                     'msg': 'Invalid Email or Password.'}
@@ -65,41 +65,33 @@ class TwoFAView(View):
         return render(request, self.template_name, context)
 
     def post(self, request, format=None):
-        username_email = escape(strip_tags(request.POST.get('email', '')))
-        if '@' in username_email:
-            email = username_email
-        else:
-            validUser = User.objects.get(username=username_email)
-            email = validUser.email
-        password = escape(strip_tags(request.POST.get('password', '')))
-        two_fa_code = escape(strip_tags(request.POST.get('two_fa_code', '')))
-        validUser = User.objects.get(login_code=two_fa_code)
+        two_fa_code = escape(strip_tags(request.POST.get('auth_code', '')))
+        validUser = User.objects.get(two_fa=two_fa_code,
+                                     email=request.session.get('email'))
         if validUser:
-            user = authenticate(email=email, password=password)
-            if user:
-                if user.is_active:
-                    if user.is_verified:
-                        auth_login(request, user)
-                        # remember = escape(strip_tags(
-                        #     request.POST.get('remember_me', '')))
-                        # if remember:
-                        #     settings.SESSION_EXPIRE_AT_BROWSER_CLOSE = False
-                        # else:
-                        #     settings.SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-                        data = {
-                            'status': status.HTTP_200_OK,
-                            'msg': 'Login Successful.',
-                            'role': user.role,
-                        }
+            if validUser.is_active:
+                if validUser.is_verified:
+                    auth_login(request, validUser)
+                    remember = request.POST.get('remember_me')
+                    if remember:
+                        settings.SESSION_EXPIRE_AT_BROWSER_CLOSE = False
                     else:
-                        data = {'status': status.HTTP_401_UNAUTHORIZED,
-                                'msg': 'Your account is not verified.'}
+                        settings.SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+                    data = {
+                        'status': status.HTTP_200_OK,
+                        'msg': 'Login Successful.',
+                        'role': validUser.role,
+                    }
+                    validUser.two_fa = ''
+                    validUser.save()
+                    del request.session['email']
+                    del request.session['remember_me']
                 else:
                     data = {'status': status.HTTP_401_UNAUTHORIZED,
-                            'msg': 'Your account has been disabled.'}
+                            'msg': 'Your account is not verified.'}
             else:
-                data = {'status': status.HTTP_403_FORBIDDEN,
-                        'msg': 'Invalid Email or Password.'}
+                data = {'status': status.HTTP_401_UNAUTHORIZED,
+                        'msg': 'Your account has been disabled.'}
         else:
             data = {'status': status.HTTP_403_FORBIDDEN,
                     'msg': 'Invalid Code.'}

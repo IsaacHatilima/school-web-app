@@ -44,6 +44,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     role = models.CharField(max_length=50, choices=ROLE_CHOICES, null=False)
     login_attemps = models.IntegerField(default=0, null=False)
     created_at = models.DateTimeField(auto_now_add=True, null=False)
+    two_fa = models.CharField(max_length=10, null=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'role']
