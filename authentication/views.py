@@ -63,6 +63,13 @@ class LoginView(View):
         return HttpResponse(json.dumps(data))
 
 
+class TwoFAView(View):
+    template_name = 'auth/twofa.html'
+
+    def get(self, request):
+        return render(request, self.template_name)
+
+
 class RequestPasswordResetView(View):
     template_name = 'auth/forgotPassword.html'
 
