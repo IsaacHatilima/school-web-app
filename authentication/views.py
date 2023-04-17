@@ -1,13 +1,15 @@
 from django.shortcuts import render
 from django.views import View
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth import authenticate, logout, login as auth_login
+from django.contrib.auth import logout, login as auth_login
 from django.utils.html import strip_tags, escape
 from django.conf import settings
 from rest_framework import status
 import json
 from django.urls import reverse
 from django.utils.crypto import get_random_string
+from .utils import Util
+from django.template.loader import get_template
 from .models import User
 
 
@@ -45,9 +47,20 @@ class LoginView(View):
                     'remember_me', '')
             # Send 2FA Code
             two_fa = get_random_string(length=6)
+            # Store Code
             validUser.two_fa = two_fa.upper()
             validUser.save()
-            print(two_fa.upper())
+            # Email Code
+            htmly = get_template('emailTemplates/2fa.html')
+            context = {'firstname': validUser.username, "code": two_fa.upper()}
+            html_content = htmly.render(context)
+            data = {
+                'email_to': validUser.email,
+                'email_body': html_content,
+                'email_subject': '2FA Code'
+            }
+            Util.send_email(data)
+            # Return Success
             data = {'status': status.HTTP_200_OK,
                     'msg': 'Valid User.'}
         else:
