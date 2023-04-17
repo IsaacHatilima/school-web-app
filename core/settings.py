@@ -28,6 +28,7 @@ AUTH_USER_MODEL = 'authentication.User'
 
 CREATED_APPS = [
     'authentication',
+    'administration',
 ]
 
 THIRD_PARTY_APPS = [

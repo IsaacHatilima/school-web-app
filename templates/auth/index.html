@@ -36,11 +36,9 @@
                     <span>Log in to get going</span>
                   </h6>
                 </div>
-                <div class="card-content">
-                 
+                <div class="card-content">                
                   <div class="card-body pt-0">
                     <form class="form-horizontal">
-                      <div id="login">
                         <fieldset class="form-group floating-label-form-group">
                           <label for="user-name">Username/Email</label>
                           <input type="text" class="form-control" id="user-name" placeholder="Username/Email">
@@ -59,15 +57,8 @@
                           <div class="col-md-6 col-12 float-sm-left text-center text-sm-right"><a href="{% url 'auth_two_fa' %}"
                               class="card-link">Forgot Password?</a></div>
                         </div>
-                        <button type="button" onclick="ShowHideDiv(this)" class="btn btn-outline-primary btn-block"><i class="ft-unlock"></i> Login</button>
-                      </div>
-                      <div id="2fa" style="display: none;">
-                        <fieldset class="form-group floating-label-form-group">
-                          <label for="user-name">Code</label>
-                          <input type="text" class="form-control" id="user-name" placeholder="Code">
-                        </fieldset>
-                        <button type="submit" class="btn btn-outline-primary btn-block"><i class="ft-unlock"></i> Proceed</button>
-                      </div>
+                        <button type="button" onclick="ShowHideDiv(this)" class="btn btn-outline-primary btn-block"><i class="ft-unlock"></i>
+                          Login</button>
                     </form>
                   </div>
                 </div>
