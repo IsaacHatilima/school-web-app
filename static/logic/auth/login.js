@@ -24,8 +24,24 @@ $('#login').submit(function (e)  {
             if (data) {
                 var status = data.status
                 var message = data.msg
+                var login_type = data.login_type
+                var role = data.role
                 if (status === 200) {
-                    window.location.href = auth_2fa;
+                    console.log(login_type)
+                    if (login_type) {
+                        $("#heading").html('Authenticated!');
+                        $("#msg").html('Redirecting, Please Wait...');
+                        $("#notify").removeClass("alert-info alert-warning alert-danger").addClass("alert-success");
+                        if (role === "System Admin") {
+                            setTimeout(function () {
+                                window.location.href = admin_home;
+                            }, 2500);
+                        }
+                    }
+                    else {
+                        window.location.href = auth_2fa;
+                    }
+                    
                 }
                 else if (status === 403) {
                     $("#heading").html('Warning!');

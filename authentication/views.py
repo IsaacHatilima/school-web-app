@@ -38,36 +38,62 @@ class LoginView(View):
         else:
             validUser = User.objects.get(username=username_email)
         password = escape(strip_tags(request.POST.get('password', '')))
-        if validUser.check_password(password):
-            request.session['email'] = validUser.email
-            remember = request.POST.get('remember_me')
-            if remember:
-                request.session['remember_me'] = request.POST.get(
-                    'remember_me', '')
+        # Check if 2FA is ACTIVE
+        # 2FA IS NOT ACTIVE
+        if not validUser.is_two_fa:
+            if validUser.is_active:
+                if validUser.is_verified:
+                    auth_login(request, validUser)
+                    remember = request.POST.get('remember_me')
+                    if remember:
+                        settings.SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+                    else:
+                        settings.SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+                    data = {
+                        'status': status.HTTP_200_OK,
+                        'msg': 'Login Successful.',
+                        'login_type': 'No 2FA',
+                        'role': validUser.role,
+                    }
+                else:
+                    data = {'status': status.HTTP_401_UNAUTHORIZED,
+                            'msg': 'Your account is not verified.'}
             else:
-                request.session['remember_me'] = request.POST.get(
-                    'remember_me', '')
-            # Send 2FA Code
-            two_fa = get_random_string(length=6)
-            # Store Code
-            validUser.two_fa = two_fa.upper()
-            validUser.save()
-            # Email Code
-            htmly = get_template('emailTemplates/2fa.html')
-            context = {'firstname': validUser.username, "code": two_fa.upper()}
-            html_content = htmly.render(context)
-            data = {
-                'email_to': validUser.email,
-                'email_body': html_content,
-                'email_subject': '2FA Code'
-            }
-            Util.send_email(data)
-            # Return Success
-            data = {'status': status.HTTP_200_OK,
-                    'msg': 'Valid User.'}
+                data = {'status': status.HTTP_401_UNAUTHORIZED,
+                        'msg': 'Your account has been disabled.'}
+        # 2FA IS ACTIVE
         else:
-            data = {'status': status.HTTP_403_FORBIDDEN,
-                    'msg': 'Invalid Email or Password.'}
+            if validUser.check_password(password):
+                request.session['email'] = validUser.email
+                remember = request.POST.get('remember_me')
+                if remember:
+                    request.session['remember_me'] = request.POST.get(
+                        'remember_me', '')
+                else:
+                    request.session['remember_me'] = request.POST.get(
+                        'remember_me', '')
+                # Send 2FA Code
+                two_fa = get_random_string(length=6)
+                # Store Code
+                validUser.two_fa = two_fa.upper()
+                validUser.save()
+                # Email Code
+                htmly = get_template('emailTemplates/2fa.html')
+                context = {'firstname': validUser.username,
+                           "code": two_fa.upper()}
+                html_content = htmly.render(context)
+                data = {
+                    'email_to': validUser.email,
+                    'email_body': html_content,
+                    'email_subject': '2FA Code'
+                }
+                Util.send_email(data)
+                # Return Success
+                data = {'status': status.HTTP_200_OK,
+                        'msg': 'Valid User.'}
+            else:
+                data = {'status': status.HTTP_403_FORBIDDEN,
+                        'msg': 'Invalid Email or Password.'}
         return HttpResponse(json.dumps(data))
 
 
@@ -95,6 +121,7 @@ class TwoFAView(View):
                     data = {
                         'status': status.HTTP_200_OK,
                         'msg': 'Login Successful.',
+                        'login_type': 'With 2FA',
                         'role': validUser.role,
                     }
                     validUser.two_fa = ''
