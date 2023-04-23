@@ -10,6 +10,8 @@ from django.urls import reverse
 from django.utils.crypto import get_random_string
 from .utils import Util
 from django.template.loader import get_template
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.sites.shortcuts import get_current_site
 from .models import User
 
 
@@ -116,6 +118,33 @@ class RequestPasswordResetView(View):
 
     def get(self, request):
         return render(request, self.template_name)
+
+    def post(self, request, format=None):
+        try:
+            associated_users = User.objects.get(
+                email=escape(strip_tags(request.POST.get('email', ''))))
+            if associated_users:
+                token = RefreshToken.for_user(associated_users).access_token
+                current_site = get_current_site(request).domain
+                relative_link = reverse('auth_set_password')
+                absurl = 'http://'+current_site
+                + relative_link+"?token="+str(token)
+                htmly = get_template('email/newPassword.html')
+                context = {'firstname': associated_users.firstname+' '
+                           + associated_users.lastname, "absurl": absurl}
+                html_content = htmly.render(context)
+                data = {
+                    'email_to': associated_users.email,
+                    'email_body': html_content,
+                    'email_subject': 'Password Reset'
+                }
+                Util.send_email(data)
+                data = {'status': status.HTTP_200_OK,
+                        'msg': 'An email has been sent to you email.'}
+        except User.DoesNotExist:
+            data = {'status': status.HTTP_200_OK,
+                    'msg': 'An email has been sent to you email.'}
+        return HttpResponse(json.dumps(data))
 
 
 class SetPasswordResetView(View):
