@@ -9,3 +9,11 @@ class DashboardView(LoginRequiredMixin, View):
 
     def get(self, request):
         return render(request, self.template_name)
+
+
+class SettingsView(LoginRequiredMixin, View):
+    template_name = 'public/settings.html'
+    login_url = '/'
+
+    def get(self, request):
+        return render(request, self.template_name)
