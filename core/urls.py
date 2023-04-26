@@ -20,4 +20,5 @@ urlpatterns = [
     # path('admin/', admin.site.urls),
     path('', include('authentication.urls')),
     path('school-admin/', include('administration.urls')),
+    path('get-set/', include('get_set.urls')),
 ]
