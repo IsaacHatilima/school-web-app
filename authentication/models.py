@@ -80,6 +80,8 @@ class StaffProfile (models.Model):
                                   null=False, unique=True)
     user = models.ForeignKey(User, null=False, editable=False,
                              on_delete=models.PROTECT)
+    department_of = models.ForeignKey('administration.Department', null=False,
+                                      editable=False, on_delete=models.PROTECT)
     firstname = models.CharField(max_length=50, null=False)
     lastname = models.CharField(max_length=50, null=False)
     cell = models.CharField(max_length=50, null=False)
