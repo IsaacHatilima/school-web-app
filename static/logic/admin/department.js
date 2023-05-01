@@ -22,24 +22,25 @@ $('#make_department').submit(function (e) {
                 var status = data.status
                 var message = data.msg
                 if (status === 200) {
+                    toastr.success(message, 'Success', { "closeButton": true, "showMethod": "slideDown", "hideMethod": "fadeOut", timeOut: 2000 });
+                    $("#BTNIcon").removeClass("fa-spinner fa-pulse fa-fw").addClass("fa-save");
+                    document.getElementById("makeBTN").disabled = false;
                     setTimeout(function () {
                         window.location.href = admin_departments;
-                    }, 2500);
+                    }, 2300);
                     
                 }
                 else if (status === 403) {
-                    $("#heading").html('Warning!');
-                    $("#msg").html(message);
-                    $("#notify").removeClass("alert-info alert-success alert-danger").addClass("alert-warning");
-                    document.getElementById("loginBTN").disabled = false;
+                    toastr.warning(message, 'Warning', { "closeButton": true, "showMethod": "slideDown", "hideMethod": "fadeOut", timeOut: 2000 });
+                    $("#BTNIcon").removeClass("fa-spinner fa-pulse fa-fw").addClass("fa-save");
+                    document.getElementById("makeBTN").disabled = false;
                 }
             }
         },
-        error: function (data) {
-            $("#heading").html('Warning!');
-            $("#msg").html('Internal Server Error');
-            $("#notify").removeClass("alert-info alert-warning alert-success").addClass("alert-danger");
-            document.getElementById("loginBTN").disabled = false;
+        error: function () {
+            toastr.error('Internal Server Error!', 'Error', { "closeButton": true, "showMethod": "slideDown", "hideMethod": "fadeOut", timeOut: 2000 });
+            $("#BTNIcon").removeClass("fa-spinner fa-pulse fa-fw").addClass("fa-save");
+            document.getElementById("makeBTN").disabled = false;
         }
     });
 })

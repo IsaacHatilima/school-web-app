@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.views import View
+from django.utils.html import strip_tags, escape
 from django.contrib.auth.mixins import LoginRequiredMixin
+from .models import Department
 
 
 class DashboardView(LoginRequiredMixin, View):
@@ -23,6 +25,12 @@ class DepartmentView(LoginRequiredMixin, View):
             'is_depts': True,
         }
         return render(request, self.template_name, context)
+
+    def post(self, request):
+        department = escape(strip_tags(request.POST.get('department', '')))
+        dept = Department.objects.create(department=department,
+                                         created_by=request.user)
+        
 
 
 class SettingsView(LoginRequiredMixin, View):

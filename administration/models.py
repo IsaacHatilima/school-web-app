@@ -9,7 +9,7 @@ class Department (models.Model):
                                   null=False, unique=True)
     created_by = models.ForeignKey(User, null=False, editable=False,
                                    on_delete=models.PROTECT)
-    department = models.CharField(max_length=50, null=False)
+    department = models.CharField(max_length=50, null=False, unique=True)
     created_at = models.DateTimeField(auto_now_add=True, null=False)
 
     class Meta:
