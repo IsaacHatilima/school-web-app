@@ -58,6 +58,14 @@ class DepartmentDetailsView(LoginRequiredMixin, View):
                 'msg': department.title()+' Department Updated Successfuly.'}
         return HttpResponse(json.dumps(data))
 
+    def delete(self, request, public_key):
+        department = escape(strip_tags(request.POST.get('department', '')))
+        instance = Department.objects.get(public_key=public_key)
+        instance.delete()
+        data = {'status': status.HTTP_200_OK,
+                'msg': department.title()+' Department Deleted Successfuly.'}
+        return HttpResponse(json.dumps(data))
+
 
 class SettingsView(LoginRequiredMixin, View):
     template_name = 'public/settings.html'
