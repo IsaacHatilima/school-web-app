@@ -53,7 +53,7 @@ class LoginView(View):
                         'status': status.HTTP_200_OK,
                         'msg': 'Login Successful.',
                         'login_type': 'No 2FA',
-                        'role': validUser.role,
+                        'destination': reverse('admin_home'),
                         'url': request.POST.get('next')
                     }
                 else:
@@ -67,6 +67,7 @@ class LoginView(View):
             if validUser.check_password(password):
                 request.session['email'] = validUser.email
                 remember = request.POST.get('remember_me')
+                request.session['next'] = request.POST.get('next', '')
                 if remember:
                     request.session['remember_me'] = request.POST.get(
                         'remember_me', '')
@@ -95,10 +96,6 @@ class LoginView(View):
             else:
                 data = {'status': status.HTTP_403_FORBIDDEN,
                         'msg': 'Invalid Email or Password.'}
-        # if request.POST.get('next'):
-        #     return HttpResponseRedirect('/school-admin/departments/')
-        # else:
-        #     return HttpResponse(json.dumps(data))
         return HttpResponse(json.dumps(data))
 
 
@@ -107,7 +104,8 @@ class TwoFAView(View):
 
     def get(self, request):
         remember_me = request.session.get('remember_me')
-        context = {"remember_me": remember_me}
+        next_url = request.session.get('next')
+        context = {"remember_me": remember_me, "next_url": next_url}
         return render(request, self.template_name, context)
 
     def post(self, request, format=None):
@@ -127,7 +125,8 @@ class TwoFAView(View):
                         'status': status.HTTP_200_OK,
                         'msg': 'Login Successful.',
                         'login_type': 'With 2FA',
-                        'role': validUser.role,
+                        'destination': reverse('admin_home'),
+                        'url': request.POST.get('next')
                     }
                     validUser.two_fa = ''
                     validUser.save()
