@@ -132,6 +132,7 @@ class TwoFAView(View):
                     validUser.save()
                     del request.session['email']
                     del request.session['remember_me']
+                    del request.session['next']
                 else:
                     data = {'status': status.HTTP_401_UNAUTHORIZED,
                             'msg': 'Your account is not verified.'}
