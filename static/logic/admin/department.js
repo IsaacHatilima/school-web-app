@@ -21,7 +21,7 @@ $('#make_department').submit(function (e) {
             if (data) {
                 var status = data.status
                 var message = data.msg
-                if (status === 200) {
+                if (status === 201) {
                     toastr.success(message, 'Success', { "closeButton": true, "showMethod": "slideDown", "hideMethod": "fadeOut", timeOut: 2000 });
                     $("#BTNIcon").removeClass("fa-spinner fa-pulse fa-fw").addClass("fa-save");
                     document.getElementById("makeBTN").disabled = false;
@@ -30,7 +30,7 @@ $('#make_department').submit(function (e) {
                     }, 2300);
                     
                 }
-                else if (status === 403) {
+                else if (status === 302) {
                     toastr.warning(message, 'Warning', { "closeButton": true, "showMethod": "slideDown", "hideMethod": "fadeOut", timeOut: 2000 });
                     $("#BTNIcon").removeClass("fa-spinner fa-pulse fa-fw").addClass("fa-save");
                     document.getElementById("makeBTN").disabled = false;

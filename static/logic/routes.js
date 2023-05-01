@@ -10,4 +10,4 @@ var get_set_two_fa = "../../get-set/two-fa/";
 //SYSTEM ADMIN
 //1. Dashboard
 var admin_home = "../school-admin/";
-var admin_departments = "../school-admin/departments/";
+var admin_departments = "../departments/";

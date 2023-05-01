@@ -17,7 +17,7 @@ class Department (models.Model):
         ordering = ['-id']
 
     def get_absolute_url(self):
-        return reverse('admin_departments',
+        return reverse('admin_dept_details',
                        kwargs={'public_key': self.public_key})
 
     def __str__(self):

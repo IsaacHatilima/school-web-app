@@ -67,21 +67,22 @@ class User(AbstractBaseUser, PermissionsMixin):
         db_table = "users"
 
 
-# class StaffProfile (models.Model):
-#     public_key = models.UUIDField(default=uuid.uuid4, editable=False,
-#                                   null=False, unique=True)
-#     user = models.ForeignKey(User, null=False, editable=False,
-# on_delete=models.PROTECT)
-#     firstname = models.CharField(max_length=50, null=False)
-#     lastname = models.CharField(max_length=50, null=False)
-#     cell = models.CharField(max_length=50, null=False)
-#     marital_status = models.CharField(max_length=50, null=False)
+class StaffProfile (models.Model):
+    public_key = models.UUIDField(default=uuid.uuid4, editable=False,
+                                  null=False, unique=True)
+    user = models.ForeignKey(User, null=False, editable=False,
+                             on_delete=models.PROTECT)
+    firstname = models.CharField(max_length=50, null=False)
+    lastname = models.CharField(max_length=50, null=False)
+    cell = models.CharField(max_length=50, null=False)
+    marital_status = models.CharField(max_length=50, null=False)
 
-#     class Meta:
-#         ordering = ['-StaffProfile']
+    class Meta:
+        db_table = 'staff_profiles'
+        ordering = ['-id']
 
-#     def get_absolute_url(self):
-#         return reverse('url', args=[args])
+    # def get_absolute_url(self):
+    #     return reverse('url', args=[args])
 
-#     def __str__(self):
-#         return self.field
+    def __str__(self):
+        return self.firstname+' '+self.lastname
