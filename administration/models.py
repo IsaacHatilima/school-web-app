@@ -7,7 +7,7 @@ from authentication.models import StaffProfile
 class Department (models.Model):
     public_key = models.UUIDField(default=uuid.uuid4, editable=False,
                                   null=False, unique=True)
-    created_by = models.ForeignKey(StaffProfile, null=False, editable=False,
+    created_by = models.ForeignKey(StaffProfile, null=True, editable=False,
                                    on_delete=models.PROTECT)
     department = models.CharField(max_length=50, null=False, unique=True)
     members = models.IntegerField(default=0, null=False)
