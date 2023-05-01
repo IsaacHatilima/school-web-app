@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import (
     AbstractBaseUser, BaseUserManager, PermissionsMixin)
 import uuid
-from django.urls import reverse
+# from django.urls import reverse
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
@@ -54,7 +54,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     def __str__(self):
-        return self.email + ' ('+self.is_active+')'
+        return self.email
 
     def tokens(self):
         refresh = RefreshToken.for_user(self)
@@ -62,6 +62,14 @@ class User(AbstractBaseUser, PermissionsMixin):
             'refresh': str(refresh),
             'access': str(refresh.access_token)
         }
+
+    def get_staff_names(self):
+        profile = StaffProfile.objects.get(user=self.id)
+        return profile.firstname+' '+profile.lastname
+
+    def get_staff_id(self):
+        profile = StaffProfile.objects.get(user=self.id)
+        return profile
 
     class Meta:
         db_table = "users"

@@ -65,7 +65,7 @@
                                 {% for department in depts %}
                                     <tr>
                                         <td>{{department.department}}</td>
-                                        <td>{{department.created_by.id}}</td>
+                                        <td>{{department.created_by.firstname}} {{department.created_by.lastname}}</td>
                                         <!-- <td>{{department.created_by.firstname}} {{province.created_by.lastname}}</td> -->
                                         <td>{{department.created_at}}</td>
                                         <td>

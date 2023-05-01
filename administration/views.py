@@ -5,6 +5,7 @@ from django.views import View
 from django.utils.html import strip_tags, escape
 from rest_framework import status
 from django.contrib.auth.mixins import LoginRequiredMixin
+from authentication.permissions import get_staff_id
 from .models import Department
 
 
@@ -34,14 +35,15 @@ class DepartmentView(LoginRequiredMixin, View):
     def post(self, request):
         department = escape(strip_tags(request.POST.get('department', '')))
         try:
-            Department.objects.get(department=department.capitalize())
+            Department.objects.get(department=department.title())
             data = {'status': status.HTTP_302_FOUND,
                     'msg': 'Department Already Exists.'}
         except Department.DoesNotExist:
-            Department.objects.create(department=department,
-                                      created_by=request.user)
+            # print(get_staff_id(request))
+            Department.objects.create(department=department.title(),
+                                      created_by=get_staff_id(request))
             data = {'status': status.HTTP_201_CREATED,
-                    'msg': 'Department Created Successfuly.'}
+                    'msg': department.title()+' Department Created Successfuly.'}
         return HttpResponse(json.dumps(data))
 
 
