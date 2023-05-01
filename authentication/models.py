@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import (
     AbstractBaseUser, BaseUserManager, PermissionsMixin)
 import uuid
+# from django.urls import reverse
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
@@ -44,6 +45,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     role = models.CharField(max_length=50, choices=ROLE_CHOICES, null=False)
     login_attemps = models.IntegerField(default=0, null=False)
     created_at = models.DateTimeField(auto_now_add=True, null=False)
+    two_fa = models.CharField(max_length=10, null=True)
+    is_two_fa = models.BooleanField(default=True, null=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'role']
@@ -51,7 +54,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     def __str__(self):
-        return self.email + ' ('+self.is_active+')'
+        return self.email
 
     def tokens(self):
         refresh = RefreshToken.for_user(self)
@@ -60,5 +63,36 @@ class User(AbstractBaseUser, PermissionsMixin):
             'access': str(refresh.access_token)
         }
 
+    def get_staff_names(self):
+        profile = StaffProfile.objects.get(user=self.id)
+        return profile.firstname+' '+profile.lastname
+
+    def get_staff_id(self):
+        profile = StaffProfile.objects.get(user=self.id)
+        return profile
+
     class Meta:
         db_table = "users"
+
+
+class StaffProfile (models.Model):
+    public_key = models.UUIDField(default=uuid.uuid4, editable=False,
+                                  null=False, unique=True)
+    user = models.ForeignKey(User, null=False, editable=False,
+                             on_delete=models.PROTECT)
+    department_of = models.ForeignKey('administration.Department', null=False,
+                                      editable=False, on_delete=models.PROTECT)
+    firstname = models.CharField(max_length=50, null=False)
+    lastname = models.CharField(max_length=50, null=False)
+    cell = models.CharField(max_length=50, null=False)
+    marital_status = models.CharField(max_length=50, null=False)
+
+    class Meta:
+        db_table = 'staff_profiles'
+        ordering = ['-id']
+
+    # def get_absolute_url(self):
+    #     return reverse('url', args=[args])
+
+    def __str__(self):
+        return self.firstname+' '+self.lastname

@@ -28,11 +28,14 @@ AUTH_USER_MODEL = 'authentication.User'
 
 CREATED_APPS = [
     'authentication',
+    'administration',
+    'get_set',
 ]
 
 THIRD_PARTY_APPS = [
     'rest_framework',
-    'rest_framework_simplejwt'
+    'rest_framework_simplejwt',
+    'slippers',
 ]
 
 CORE_APPS = [
@@ -102,7 +105,7 @@ DATABASES = {
     }
 }
 
-DEFAULT_FROM_EMAIL = 'LIAZ Membership <'+str(os.getenv('EMAIL_HOST_USER'))+'>'
+DEFAULT_FROM_EMAIL = 'CHIKOLO <'+str(os.getenv('EMAIL_HOST_USER'))+'>'
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = os.getenv('EMAIL_SERVER')
 EMAIL_USE_TLS = True
@@ -135,7 +138,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Berlin'
 
 USE_I18N = True
 
