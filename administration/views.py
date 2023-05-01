@@ -14,6 +14,17 @@ class DashboardView(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
 
+class DepartmentView(LoginRequiredMixin, View):
+    template_name = 'systemadmin/pages/departments.html'
+    login_url = '/'
+
+    def get(self, request):
+        context = {
+            'is_depts': True,
+        }
+        return render(request, self.template_name, context)
+
+
 class SettingsView(LoginRequiredMixin, View):
     template_name = 'public/settings.html'
     login_url = '/'
