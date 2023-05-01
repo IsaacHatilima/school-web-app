@@ -49,8 +49,14 @@ class DepartmentView(LoginRequiredMixin, View):
 
 class DepartmentDetailsView(LoginRequiredMixin, View):
 
-    def get(self, request):
-        pass
+    def post(self, request, public_key):
+        department = escape(strip_tags(request.POST.get('department', '')))
+        instance = Department.objects.get(public_key=public_key)
+        instance.department = department.title()
+        instance.save()
+        data = {'status': status.HTTP_200_OK,
+                'msg': department.title()+' Department Updated Successfuly.'}
+        return HttpResponse(json.dumps(data))
 
 
 class SettingsView(LoginRequiredMixin, View):

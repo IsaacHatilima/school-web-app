@@ -10,6 +10,7 @@ class Department (models.Model):
     created_by = models.ForeignKey(StaffProfile, null=False, editable=False,
                                    on_delete=models.PROTECT)
     department = models.CharField(max_length=50, null=False, unique=True)
+    members = models.IntegerField(default=0, null=False)
     created_at = models.DateTimeField(auto_now_add=True, null=False)
 
     class Meta:

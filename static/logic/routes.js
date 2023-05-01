@@ -11,3 +11,4 @@ var get_set_two_fa = "../../get-set/two-fa/";
 //1. Dashboard
 var admin_home = "../school-admin/";
 var admin_departments = "../departments/";
+var admin_dept_details ="../departments/details/"
