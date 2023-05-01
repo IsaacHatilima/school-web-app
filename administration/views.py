@@ -12,6 +12,7 @@ from .models import Department
 class DashboardView(LoginRequiredMixin, View):
     template_name = 'systemadmin/pages/index.html'
     login_url = '/'
+    redirect_field_name = 'next'
 
     def get(self, request):
         context = {
@@ -23,6 +24,7 @@ class DashboardView(LoginRequiredMixin, View):
 class DepartmentView(LoginRequiredMixin, View):
     template_name = 'systemadmin/pages/departments.html'
     login_url = '/'
+    redirect_field_name = 'next'
 
     def get(self, request):
         instance = Department.objects.all()
@@ -70,6 +72,7 @@ class DepartmentDetailsView(LoginRequiredMixin, View):
 class SettingsView(LoginRequiredMixin, View):
     template_name = 'public/settings.html'
     login_url = '/'
+    redirect_field_name = 'next'
 
     def get(self, request):
         context = {

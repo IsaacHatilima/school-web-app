@@ -44,6 +44,7 @@
                 <div class="card-content">                
                   <div class="card-body pt-0">
                     <form class="form-horizontal" id="login" novalidate>
+                        <input type="text" id="next" hidden name="next" value="{{ request.GET.next }}" />
                         <fieldset class="form-group floating-label-form-group">
                           <label for="email">Username/Email</label>
                           <input type="text" class="form-control" id="email" placeholder="Username/Email">

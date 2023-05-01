@@ -54,6 +54,7 @@ class LoginView(View):
                         'msg': 'Login Successful.',
                         'login_type': 'No 2FA',
                         'role': validUser.role,
+                        'url': request.POST.get('next')
                     }
                 else:
                     data = {'status': status.HTTP_401_UNAUTHORIZED,
@@ -94,6 +95,10 @@ class LoginView(View):
             else:
                 data = {'status': status.HTTP_403_FORBIDDEN,
                         'msg': 'Invalid Email or Password.'}
+        # if request.POST.get('next'):
+        #     return HttpResponseRedirect('/school-admin/departments/')
+        # else:
+        #     return HttpResponse(json.dumps(data))
         return HttpResponse(json.dumps(data))
 
 

@@ -9,8 +9,9 @@ $('#login').submit(function (e)  {
     $("#notify").removeClass("alert-success alert-warning alert-danger").addClass("alert-info");
     let email = $('#email').val();
     let password = $('#password').val();
+    let next = $('#next').val();
     let remember_me = $('#remember_me:checked').val();
-    var payload = { email: email, password: password, remember_me:remember_me };
+    var payload = { email: email, password: password, remember_me:remember_me, next:next };
     $.ajax({
         url: auth_login,
         data: payload,
@@ -22,6 +23,7 @@ $('#login').submit(function (e)  {
         },
         success: function (data) {
             if (data) {
+                var url = data.url
                 var status = data.status
                 var message = data.msg
                 var login_type = data.login_type
@@ -32,11 +34,19 @@ $('#login').submit(function (e)  {
                         $("#heading").html('Authenticated!');
                         $("#msg").html('Redirecting, Please Wait...');
                         $("#notify").removeClass("alert-info alert-warning alert-danger").addClass("alert-success");
-                        if (role === "System Admin") {
+                        if (url !== null || url !== '')
+                        {
                             setTimeout(function () {
-                                window.location.href = admin_home;
+                                window.location.href = url;
                             }, 2500);
+                        } else {
+                            if (role === "System Admin") {
+                                setTimeout(function () {
+                                    window.location.href = admin_home;
+                                }, 2500);
+                            }                            
                         }
+
                     }
                     else {
                         window.location.href = auth_2fa;
