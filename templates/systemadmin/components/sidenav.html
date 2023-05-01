@@ -1,13 +1,17 @@
 <div class="main-menu menu-fixed menu-light menu-accordion" data-scroll-to-active="true">
     <div class="main-menu-content">
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
-            <li class="active nav-item">
+            <li class="{% if is_home %} active {% endif %} nav-item">
                 <a href="{% url 'admin_home' %}"><i class="ft-home"></i>
                     <span class="menu-title" data-i18n="">Dashboard</span>
                 </a>
             </li>
+            <li class=" navigation-header">
+                <span>User Managment</span><i class=" ft-minus" data-toggle="tooltip" data-placement="right"
+                    data-original-title="Others"></i>
+            </li>
             <li class=" nav-item"><a href="#"><i class="ft-users"></i><span class="menu-title"
-                        data-i18n="">Users</span></a>
+                        data-i18n="">Staff</span></a>
                 <ul class="menu-content">
                     <li><a class="menu-item" href="dashboard-ecommerce.html">Create</a>
                     </li>
@@ -15,7 +19,14 @@
                     </li>
                 </ul>
             </li>
-
+            <li class=" nav-item"><a href="#"><i class="ft-users"></i><span class="menu-title" data-i18n="">Parents</span></a>
+                <ul class="menu-content">
+                    <li><a class="menu-item" href="dashboard-ecommerce.html">Create</a>
+                    </li>
+                    <li class=""><a class="menu-item" href="dashboard-analytics.html">View</a>
+                    </li>
+                </ul>
+            </li>
 
             <li class=" navigation-header">
                 <span>Others</span><i class=" ft-minus" data-toggle="tooltip" data-placement="right"
@@ -36,7 +47,7 @@
                 </a>
             </li>
 
-            <li class=" nav-item">
+            <li class="{% if is_settings %} active {% endif %} nav-item">
                 <a href="{% url 'admin_settings' %}"><i class="ft-settings"></i>
                     <span class="menu-title" data-i18n="">Settings</span>
                 </a>

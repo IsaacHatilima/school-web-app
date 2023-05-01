@@ -8,7 +8,10 @@ class DashboardView(LoginRequiredMixin, View):
     login_url = '/'
 
     def get(self, request):
-        return render(request, self.template_name)
+        context = {
+            'is_home': True,
+        }
+        return render(request, self.template_name, context)
 
 
 class SettingsView(LoginRequiredMixin, View):
@@ -16,4 +19,7 @@ class SettingsView(LoginRequiredMixin, View):
     login_url = '/'
 
     def get(self, request):
-        return render(request, self.template_name)
+        context = {
+            'is_settings': True,
+        }
+        return render(request, self.template_name, context)
