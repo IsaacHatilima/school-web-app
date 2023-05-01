@@ -98,15 +98,15 @@ $('#final_login').submit(function (e)  {
                     $("#heading").html('Authenticated!');
                     $("#msg").html('Redirecting, Please Wait...');
                     $("#notify").removeClass("alert-info alert-warning alert-danger").addClass("alert-success");
-                    if (url !== null || url !== '')
+                    if (url === null || url === '')
                     {
                         setTimeout(function () {
-                            window.location.href = url;
-                        }, 2500);
+                            window.location.href = destination;
+                        }, 2500);  
                     } else {
                         setTimeout(function () {
-                            window.location.href = destination;
-                        }, 2500);                            
+                            window.location.href = url;
+                        }, 2500);                           
                     }
                 }
                 else if (status === 403) {
