@@ -5,6 +5,7 @@ from django.views import View
 from django.utils.html import strip_tags, escape
 from rest_framework import status
 from django.contrib.auth.mixins import LoginRequiredMixin
+from authentication.models import User
 from authentication.permissions import get_staff_id
 from .models import Department
 
@@ -75,7 +76,13 @@ class SettingsView(LoginRequiredMixin, View):
     redirect_field_name = 'next'
 
     def get(self, request):
+        two_fa = User.objects.get(id=request.user.id)
+        if two_fa.is_two_fa:
+            auth_state = 'checked'
+        else:
+            auth_state = ''
         context = {
             'is_settings': True,
+            'two_fa': auth_state
         }
         return render(request, self.template_name, context)
