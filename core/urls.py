@@ -22,3 +22,4 @@ urlpatterns = [
     path('school-admin/', include('administration.urls')),
     path('get-set/', include('get_set.urls')),
 ]
+handler404 = 'administration.views.page_not_found'

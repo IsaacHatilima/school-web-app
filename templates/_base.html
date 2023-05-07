@@ -19,6 +19,10 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/plugins/forms/switch.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'vendors/css/extensions/toastr.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/plugins/extensions/toastr.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'vendors/css/extensions/sweetalert.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/core/menu/menu-types/vertical-menu.css' %}"">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/plugins/forms/checkboxes-radios.css' %}"">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/plugins/forms/extended/form-extended.css' %}">
     {% block page_css %}
     
     {% endblock %}
@@ -105,6 +109,34 @@
     <script src="{% static 'vendors/js/forms/toggle/bootstrap-checkbox.min.js' %}" type="text/javascript"></script>
     <script src="{% static 'js/scripts/forms/switch.js' %}" type="text/javascript"></script>
     <script src="{% static 'js/scripts/forms/validation/form-validation.js' %}" type="text/javascript"></script>
+    <script src="{% static 'vendors/js/extensions/sweetalert.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/scripts/forms/checkbox-radio.js' %}" type="text/javascript"></script>
+
+    <script src="{% static 'vendors/js/forms/extended/typeahead/typeahead.bundle.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'vendors/js/forms/extended/typeahead/bloodhound.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'vendors/js/forms/extended/typeahead/handlebars.js' %}" type="text/javascript"></script>
+    <script src="{% static 'vendors/js/forms/extended/inputmask/jquery.inputmask.bundle.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'vendors/js/forms/extended/maxlength/bootstrap-maxlength.js' %}" type="text/javascript"></script>
+
+    <script>
+        $('.phone-inputmask').inputmask("(999) 999999999");
+
+        $('.email-inputmask').inputmask({
+            mask: "*{1,20}[.*{1,20}][.*{1,20}][.*{1,20}]@*{1,20}[*{2,6}][*{1,2}].*{1,}[.*{2,6}][.*{1,2}]",
+            greedy: false,
+            onBeforePaste: function (pastedValue, opts) {
+                pastedValue = pastedValue.toLowerCase();
+                return pastedValue.replace("mailto:", "");
+            },
+            definitions: {
+                '*': {
+                    validator: "[0-9A-Za-z!#$%&'*+/=?^_`{|}~/-]",
+                    cardinality: 1,
+                    casing: "lower"
+                }
+            }
+        });
+    </script>
     
     {% block page_scripts %}
     {% endblock %}

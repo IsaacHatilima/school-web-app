@@ -16,10 +16,9 @@
                             <div class="card-body ">
                                 <fieldset>
                                     <div class="float-left" id="checker">
-                                        <input type="checkbox" class="switch" id="two_fa" data-group-cls="btn-group-sm" data-off-label="Off" data-on-label="On" data-icon-cls="fa" data-off-icon-cls="ft-alert-triangle" data-on-icon-cls="ft-check" onchange="change()"/>
+                                        <input type="checkbox" class="switch" {{ two_fa }} id="two_fa" data-group-cls="btn-group-sm" data-off-label="Off" data-on-label="On" data-icon-cls="fa" data-off-icon-cls="ft-alert-triangle" data-on-icon-cls="ft-check" onchange="change(this)"/>
                                     </div>
                                 </fieldset>
-                                
                             </div>
                         </div>
                     </div>
@@ -28,6 +27,7 @@
         </div>
     </div>
 </div>
+
 {% endblock %}
 {% block page_scripts %}
     <script src="{% static 'logic/get_set.js' %}" type="text/javascript"></script>
