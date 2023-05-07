@@ -5,6 +5,7 @@ from django.views import View
 from django.utils.html import strip_tags, escape
 from rest_framework import status
 from django.contrib.auth.mixins import LoginRequiredMixin
+from authentication.models import User
 from authentication.permissions import get_staff_id
 from .models import Department
 
@@ -19,6 +20,10 @@ class DashboardView(LoginRequiredMixin, View):
             'is_home': True,
         }
         return render(request, self.template_name, context)
+
+
+def page_not_found(request, exception):
+    return render(request, '404.html')
 
 
 class DepartmentView(LoginRequiredMixin, View):
@@ -75,7 +80,27 @@ class SettingsView(LoginRequiredMixin, View):
     redirect_field_name = 'next'
 
     def get(self, request):
+        two_fa = User.objects.get(id=request.user.id)
+        if two_fa.is_two_fa:
+            auth_state = 'checked'
+        else:
+            auth_state = ''
         context = {
             'is_settings': True,
+            'two_fa': auth_state
+        }
+        return render(request, self.template_name, context)
+
+
+class StaffManagerView(LoginRequiredMixin, View):
+    template_name = 'systemadmin/pages/createStaff.html'
+    login_url = '/'
+    redirect_field_name = 'next'
+
+    def get(self, request):
+        instance = Department.objects.all()
+        context = {
+            'is_makeStaff': True,
+            'departments': instance
         }
         return render(request, self.template_name, context)
