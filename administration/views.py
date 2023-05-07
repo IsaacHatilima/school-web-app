@@ -86,3 +86,17 @@ class SettingsView(LoginRequiredMixin, View):
             'two_fa': auth_state
         }
         return render(request, self.template_name, context)
+
+
+class StaffManagerView(LoginRequiredMixin, View):
+    template_name = 'systemadmin/pages/createStaff.html'
+    login_url = '/'
+    redirect_field_name = 'next'
+
+    def get(self, request):
+        instance = Department.objects.all()
+        context = {
+            'is_makeStaff': True,
+            'departments': instance
+        }
+        return render(request, self.template_name, context)

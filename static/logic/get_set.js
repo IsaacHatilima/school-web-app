@@ -99,6 +99,7 @@ function change() {
             } 
             else {
                 swal.close()
+                window.location.href = admin_settings;
             }
         });
     }

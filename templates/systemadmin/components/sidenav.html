@@ -13,7 +13,7 @@
             <li class=" nav-item"><a href="#"><i class="ft-users"></i><span class="menu-title"
                         data-i18n="">Staff</span></a>
                 <ul class="menu-content">
-                    <li><a class="menu-item" href="dashboard-ecommerce.html">Create</a>
+                    <li class="{% if is_makeStaff %} active {% endif %}"><a class="menu-item" href="{% url 'admin_make_staff' %}">Create</a>
                     </li>
                     <li class=""><a class="menu-item" href="dashboard-analytics.html">View</a>
                     </li>
