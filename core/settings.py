@@ -21,7 +21,7 @@ DEBUG = bool(int(os.getenv('DEBUG'), 0))
 if DEBUG:
     ALLOWED_HOSTS = []
 else:
-    ALLOWED_HOSTS = ['demo.isaachatilima.com']
+    ALLOWED_HOSTS = ['demo.isaachatilima.com','*']
 
 AUTH_USER_MODEL = 'authentication.User'
 # Application definition

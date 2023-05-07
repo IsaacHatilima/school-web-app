@@ -22,6 +22,10 @@ class DashboardView(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
 
+def page_not_found(request, exception):
+    return render(request, '404.html')
+
+
 class DepartmentView(LoginRequiredMixin, View):
     template_name = 'systemadmin/pages/departments.html'
     login_url = '/'
