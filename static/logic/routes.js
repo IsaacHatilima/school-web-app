@@ -6,6 +6,8 @@ var auth_set_password = "/set-password/";
 
 //Get Set
 var get_set_two_fa = "../../get-set/two-fa/";
+var check_email = "../../../get-set/email-checker/";
+var check_username = "../../../get-set/username-checker/";
 
 //SYSTEM ADMIN
 //1. Dashboard
