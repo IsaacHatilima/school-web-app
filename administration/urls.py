@@ -8,5 +8,5 @@ urlpatterns = [
     path('departments/', DepartmentView.as_view(), name="admin_departments"),
     path('departments/details/<public_key>/', DepartmentDetailsView.as_view(),
          name="admin_dept_details"),
-    path('users/staff/', StaffManagerView.as_view(), name="admin_make_staff"),
+    path('users/staff/create', StaffManagerView.as_view(), name="admin_make_staff"),
 ]

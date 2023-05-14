@@ -15,3 +15,4 @@ var admin_home = "../school-admin/";
 var admin_departments = "../departments/";
 var admin_dept_details = "../departments/details/"
 var admin_settings = "../settings/";
+var admin_make_staff = "../staff/create";

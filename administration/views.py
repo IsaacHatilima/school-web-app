@@ -104,3 +104,8 @@ class StaffManagerView(LoginRequiredMixin, View):
             'departments': instance
         }
         return render(request, self.template_name, context)
+
+    def post(self, request):
+        first_name = escape(strip_tags(request.POST.get('fname', '')))
+        print(first_name)
+        pass
