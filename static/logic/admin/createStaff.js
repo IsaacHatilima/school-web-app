@@ -113,8 +113,8 @@ $('#memeber_staff').submit(function (e) {
                     }, 2300);
                     
                 }
-                else if (status === 302) {
-                    toastr.warning(message, 'Warning', { "closeButton": true, "showMethod": "slideDown", "hideMethod": "fadeOut", timeOut: 2000 });
+                else {
+                    toastr.warning('Account Creation Failed. Try Again', 'Warning', { "closeButton": true, "showMethod": "slideDown", "hideMethod": "fadeOut", timeOut: 2000 });
                     $("#BTNIcon").removeClass("fa-spinner fa-pulse fa-fw").addClass("fa-save");
                     document.getElementById("makeBTN").disabled = false;
                 }

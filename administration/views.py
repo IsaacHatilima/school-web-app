@@ -5,7 +5,8 @@ from django.views import View
 from django.utils.html import strip_tags, escape
 from rest_framework import status
 from django.contrib.auth.mixins import LoginRequiredMixin
-from authentication.models import User
+from django.utils.crypto import get_random_string
+from authentication.models import User, StaffProfile
 from authentication.permissions import get_staff_id
 from .models import Department
 
@@ -107,5 +108,26 @@ class StaffManagerView(LoginRequiredMixin, View):
 
     def post(self, request):
         first_name = escape(strip_tags(request.POST.get('fname', '')))
-        print(first_name)
-        pass
+        last_name = escape(strip_tags(request.POST.get('lname', '')))
+        email = escape(strip_tags(request.POST.get('email', ''))).lower()
+        cell = escape(strip_tags(request.POST.get('cell', '')))
+        username = escape(strip_tags(request.POST.get('username', '')))
+        marital_status = escape(strip_tags(request.POST.get('marital_status', '')))
+        dept = escape(strip_tags(request.POST.get('department', '')))
+        role = escape(strip_tags(request.POST.get('role', '')))
+        password = get_random_string(length=8)
+        # Create User
+        user = User.objects.create_user(username=username, email=email, role=role,
+                                        password=password)
+        # Get Department
+        department = Department.objects.get(public_key=dept)
+        # Create Profile
+        StaffProfile.objects.create(firstname=first_name, lastname=last_name,
+                                    cell=cell, marital_status=marital_status,
+                                    user=user, department_of=department)
+        # Increment Department Count
+        department.members = department.members+1
+        department.save()
+        data = {'status': status.HTTP_201_CREATED,
+                'msg': 'Account Created Successfuly.'}
+        return HttpResponse(json.dumps(data))
