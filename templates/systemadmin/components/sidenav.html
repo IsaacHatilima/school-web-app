@@ -15,7 +15,7 @@
                 <ul class="menu-content">
                     <li class="{% if is_makeStaff %} active {% endif %}"><a class="menu-item" href="{% url 'admin_make_staff' %}">Create</a>
                     </li>
-                    <li class=""><a class="menu-item" href="dashboard-analytics.html">View</a>
+                    <li class="{% if is_listStaff %} active {% endif %}"><a class="menu-item" href="{% url 'admin_list_staff' %}">View</a>
                     </li>
                 </ul>
             </li>

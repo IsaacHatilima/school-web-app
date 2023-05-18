@@ -142,3 +142,19 @@ class StaffManagerView(LoginRequiredMixin, View):
             data = {'status': status.HTTP_400_BAD_REQUEST,
                     'msg': 'Unable To Create Account.'}
         return HttpResponse(json.dumps(data))
+
+
+class StaffListView(LoginRequiredMixin, View):
+    template_name = 'systemadmin/pages/staffList.html'
+    login_url = '/'
+    redirect_field_name = 'next'
+
+    def get(self, request):
+        instance = StaffProfile.objects.all()
+        dept = Department.objects.all()
+        context = {
+            'is_listStaff': True,
+            'staff': instance,
+            'dept': dept
+        }
+        return render(request, self.template_name, context)
