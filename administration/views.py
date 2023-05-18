@@ -119,15 +119,26 @@ class StaffManagerView(LoginRequiredMixin, View):
         # Create User
         user = User.objects.create_user(username=username, email=email, role=role,
                                         password=password)
-        # Get Department
-        department = Department.objects.get(public_key=dept)
-        # Create Profile
-        StaffProfile.objects.create(firstname=first_name, lastname=last_name,
-                                    cell=cell, marital_status=marital_status,
-                                    user=user, department_of=department)
-        # Increment Department Count
-        department.members = department.members+1
-        department.save()
-        data = {'status': status.HTTP_201_CREATED,
-                'msg': 'Account Created Successfuly.'}
+        if user:
+            # Get Department
+            department = Department.objects.get(public_key=dept)
+            # Create Profile
+            created = StaffProfile.objects.get_or_create(firstname=first_name,
+                                                         lastname=last_name,
+                                                         cell=cell,
+                                                         marital_status=marital_status,
+                                                         user=user,
+                                                         department_of=department)
+            if created:
+                # Increment Department Count
+                department.members = department.members+1
+                department.save()
+                data = {'status': status.HTTP_201_CREATED,
+                        'msg': 'Account Created Successfuly.'}
+            else:
+                data = {'status': status.HTTP_400_BAD_REQUEST,
+                        'msg': 'Unable To Create Account.'}
+        else:
+            data = {'status': status.HTTP_400_BAD_REQUEST,
+                    'msg': 'Unable To Create Account.'}
         return HttpResponse(json.dumps(data))
