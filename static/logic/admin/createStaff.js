@@ -158,7 +158,7 @@ $('#update_staff').submit(function (e) {
                     $("#BTNIcon").removeClass("fa-spinner fa-pulse fa-fw").addClass("fa-save");
                     document.getElementById("updateBTN").disabled = false;
                     setTimeout(function () {
-                        window.location.href = admin_make_staff;
+                        window.location.href = admin_make_list;
                     }, 2300);
                     
                 }

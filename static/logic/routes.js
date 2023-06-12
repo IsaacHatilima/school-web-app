@@ -16,5 +16,5 @@ var admin_departments = "../departments/";
 var admin_dept_details = "../departments/details/"
 var admin_settings = "../settings/";
 var admin_make_staff = "../staff/create";
-var admin_make_staff = "../../list";
+var admin_make_list = "../../list";
 var admin_update_staff = "../";
