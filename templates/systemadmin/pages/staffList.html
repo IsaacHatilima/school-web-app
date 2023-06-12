@@ -15,7 +15,7 @@
                 <div class="col-xl-12 col-lg-12 col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title">HTML5 export buttons</h4>
+                            <h4 class="card-title">Members of Staff</h4>
                             <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                             <div class="heading-elements">
                                 <ul class="list-inline mb-0">
@@ -47,126 +47,9 @@
                                             <td>{{member.department_of}}</td>
                                             <td>{{member.user.created_at}}</td>
                                             <td>
-                                                <a data-toggle="modal" data-target="#modal_{{member.public_key}}"><i
-                                                        class="fa fa-eye"></i></a>
-
+                                                <a href="{{ member.get_absolute_url }}"><i class="fa fa-eye"></i></a>
                                             </td>
                                         </tr>
-                                        <div class="modal fade text-left" id="modal_{{member.public_key}}"
-                                            tabindex="-1" role="dialog" aria-labelledby="myModalLabel1"
-                                            aria-hidden="true">
-                                            <div class="modal-dialog modal-xl" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h4 class="modal-title" id="myModalLabel1">
-                                                            {{member.firstname}} {{member.lastname}}'s Profile</h4>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                            aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <form class="form-horizontal" novalidate
-                                                        id="update_department_{{member.public_key}}">
-                                                        <div class="modal-body">
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <div class="form-group">
-                                                                        <label for="projectinput1">First Name<span style="font-size: small;" class="danger">*</span></label>
-                                                                        <input type="text" name="fname" id="fname_{{member.public_key}}" class="form-control" value="{{member.firstname}}" required/>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <div class="form-group">
-                                                                        <label for="projectinput2">Last Name<span style="font-size: small;" class="danger">*</span></label>
-                                                                        <input type="text" id="lname_{{member.public_key}}" class="form-control" value="{{member.lastname}}" name="lname" required/>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <div class="form-group">
-                                                                        <label for="projectinput1">Cell Number</label>
-                                                                        <input type="text" id="cell_{{member.public_key}}" class="form-control phone-inputmask" value="{{member.cell}}" name="cell">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <div class="form-group">
-                                                                        <label for="projectinput2">Email<span style="font-size: small;" class="danger">*</span></label>
-                                                                        <input type="text" class="form-control" value="{{member.user}}" readonly/>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <div class="form-group">
-                                                                        <label for="projectinput1">Marital Status<span style="font-size: small;" class="danger">*</span></label>
-                                                                        <select class="form-control" name="marital_status" id="marital_status_{{member.public_key}}" required>
-                                                                            {% if member.marital_status == "Married" %} 
-                                                                                <option value="Married" selected>Married</option>
-                                                                                <option value="Single">Single</option>
-                                                                            {% else %} 
-                                                                                <option value="Married">Married</option>
-                                                                                <option value="Single" selected>Single</option>
-                                                                             {% endif %}
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <div class="form-group">
-                                                                        <label for="projectinput2">Username</label>
-                                                                        <input type="text" id="username" class="form-control" value="{{member.user.username}}" readonly/>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <h4 class="form-section"><i class="ft-shield"></i> Account Info</h4>
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <div class="form-group">
-                                                                        <label for="projectinput1">Department<span style="font-size: small;" class="danger">*</span></label>
-                                                                        <select class="form-control" name="department" id="department_{{member.public_key}}" required>
-                                                                            {% for department in dept %}
-                                                                                <option value="{{department.public_key}}" {% if member.department_of.id == department.id %} selected {% endif %}>
-                                                                                {{department.department}}</option>
-                                                                            {% endfor %}
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <div class="form-group">
-                                                                        <label for="projectinput1">User Role<span style="font-size: small;" class="danger">*</span></label>
-                                                                        <select class="form-control" name="role" id="role_{{member.public_key}}" required>
-                                                                            {% for role in member.user.ROLE_CHOICES %}
-                                                                                <option value="{{role.0}}" {% if role.0 == member.user.role %} selected {% endif %}>{{role.0}}</option>
-                                                                            {% endfor %}
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <div class="text-right">
-                                                                <button type="button" id="{{member.public_key}}"
-                                                                    class="btn btn-success"
-                                                                    onClick="update_click(this.id)"><i
-                                                                        id="BTNIcon_{{member.public_key}}"
-                                                                        class="fa fa-save"></i> Save
-                                                                </button>
-                                                                {% if department.members == 0%}
-                                                                <button type="button" id="del_{{member.public_key}}"
-                                                                    class="btn btn-danger"
-                                                                    onClick="delete_click(this.id)">Delete <i
-                                                                        id="del_BTNIcon_{{member.public_key}}"
-                                                                        class="fa fa-trash position-right"></i></button>
-                                                                {% endif%}
-                                                                <button type="reset" class="btn btn-default"
-                                                                    data-dismiss="modal">Close <i
-                                                                        class="fa fa-close position-right"></i></button>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
                                         {% endfor %}
 
                                     </tbody>
@@ -195,7 +78,7 @@
 {% endblock %}
 
 {% block page_scripts %}
-<script src="{% static 'logic/admin/department.js' %}" type="text/javascript"></script>
+<script src="{% static 'logic/admin/createStaff.js' %}" type="text/javascript"></script>
 <script src="{% static 'vendors/js/tables/datatable/datatables.min.js' %}" type="text/javascript"></script>
 <script src="{% static 'vendors/js/tables/datatable/dataTables.buttons.min.js' %}" type="text/javascript"></script>
 <script src="{% static 'vendors/js/tables/datatable/buttons.bootstrap4.min.js' %}" type="text/javascript"></script>

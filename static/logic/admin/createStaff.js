@@ -127,3 +127,53 @@ $('#memeber_staff').submit(function (e) {
         }
     });
 })
+
+//Update User
+$('#update_staff').submit(function (e) {
+    e.preventDefault();
+    //Get User ID for URL
+    let userID = $('#user_id').val();
+    // Disable Submit Button
+    document.getElementById("updateBTN").disabled = true;
+    // Switch button icon to loading Icon
+    $("#BTNIcon").removeClass("fa-save").addClass("fa-spinner fa-pulse fa-fw");
+    // Get input value
+    var form = $(this);
+    // Make payload
+    $.ajax({
+        url: admin_update_staff+userID+'/',
+        data: form.serialize(),
+        type: "POST",
+        dataType: "json",
+        headers: {
+            content_type: 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        success: function (data) {
+            if (data) {
+                var status = data.status
+                var message = data.msg
+                if (status === 200) {
+                    toastr.success(message, 'Success', { "closeButton": true, "showMethod": "slideDown", "hideMethod": "fadeOut", timeOut: 2000 });
+                    $("#BTNIcon").removeClass("fa-spinner fa-pulse fa-fw").addClass("fa-save");
+                    document.getElementById("updateBTN").disabled = false;
+                    setTimeout(function () {
+                        window.location.href = admin_make_staff;
+                    }, 2300);
+                    
+                }
+                else {
+                    toastr.warning(message, 'Warning', { "closeButton": true, "showMethod": "slideDown", "hideMethod": "fadeOut", timeOut: 2000 });
+                    $("#BTNIcon").removeClass("fa-spinner fa-pulse fa-fw").addClass("fa-save");
+                    document.getElementById("updateBTN").disabled = false;
+                }
+            }
+        },
+        error: function () {
+            toastr.error('Internal Server Error!', 'Error', { "closeButton": true, "showMethod": "slideDown", "hideMethod": "fadeOut", timeOut: 2000 });
+            $("#BTNIcon").removeClass("fa-spinner fa-pulse fa-fw").addClass("fa-save");
+            document.getElementById("updateBTN").disabled = false;
+        }
+    });
+})
+

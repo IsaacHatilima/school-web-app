@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import (
     AbstractBaseUser, BaseUserManager, PermissionsMixin)
 import uuid
-# from django.urls import reverse
+from django.urls import reverse
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
@@ -91,8 +91,8 @@ class StaffProfile (models.Model):
         db_table = 'staff_profiles'
         ordering = ['-id']
 
-    # def get_absolute_url(self):
-    #     return reverse('url', args=[args])
+    def get_absolute_url(self):
+        return reverse("admin_staff_update", kwargs={"public_key": self.public_key})
 
     def __str__(self):
         return self.firstname+' '+self.lastname

@@ -158,3 +158,43 @@ class StaffListView(LoginRequiredMixin, View):
             'dept': dept
         }
         return render(request, self.template_name, context)
+
+
+class StaffUpdateView(LoginRequiredMixin, View):
+    template_name = 'systemadmin/pages/updateStaff.html'
+    login_url = '/'
+    redirect_field_name = 'next'
+
+    def get(self, request, public_key):
+        instance = StaffProfile.objects.get(public_key=public_key)
+        dept = Department.objects.all()
+        context = {
+            'is_listStaff': True,
+            'staff': instance,
+            'dept': dept
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, public_key):
+        public_key = escape(strip_tags(request.POST.get('user_id', '')))
+        first_name = escape(strip_tags(request.POST.get('fname', '')))
+        last_name = escape(strip_tags(request.POST.get('lname', '')))
+        cell = escape(strip_tags(request.POST.get('cell', '')))
+        marital_status = escape(strip_tags(request.POST.get('marital_status', '')))
+        dept = escape(strip_tags(request.POST.get('department', '')))
+        role = escape(strip_tags(request.POST.get('role', '')))
+        try:
+            profile = StaffProfile.objects.get(public_key=public_key)
+            profile.firstname = first_name
+            profile.last_name = last_name
+            profile.cell = cell
+            profile.marital_status = marital_status
+            profile.dept = dept
+            profile.role = role
+            profile.save()
+            data = {'status': status.HTTP_200_OK,
+                    'msg': 'Account Updated Successfuly.'}
+        except StaffProfile.DoesNotExist:
+            data = {'status': status.HTTP_404_NOT_FOUND,
+                    'msg': 'Account Not Found.'}
+        return HttpResponse(json.dumps(data))
