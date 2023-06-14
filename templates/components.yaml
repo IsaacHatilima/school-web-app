@@ -1,2 +1,2 @@
 components:
-  small_Card: "public/components/smallCard.html"
+  small_Card: "systemadmin/components/smallCard.html"
