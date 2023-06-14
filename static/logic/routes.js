@@ -5,7 +5,6 @@ var auth_forgot_password = "/forgot-password/";
 var auth_set_password = "/set-password/";
 
 //Get Set
-var get_set_two_fa = "../../get-set/two-fa/";
 var check_email = "../../../get-set/email-checker/";
 var check_username = "../../../get-set/username-checker/";
 
@@ -14,7 +13,6 @@ var check_username = "../../../get-set/username-checker/";
 var admin_home = "../school-admin/";
 var admin_departments = "../departments/";
 var admin_dept_details = "../departments/details/"
-var admin_settings = "../settings/";
 var admin_make_staff = "../staff/create";
 var admin_make_list = "../../list";
 var admin_update_staff = "../";
