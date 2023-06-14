@@ -12,6 +12,7 @@ from .utils import Util
 from django.template.loader import get_template
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.sites.shortcuts import get_current_site
+import jwt
 from .models import User
 
 
@@ -161,7 +162,7 @@ class RequestPasswordResetView(View):
                 relative_link = reverse('auth_set_password')
                 absurl = 'http://'+current_site
                 + relative_link+"?token="+str(token)
-                htmly = get_template('email/newPassword.html')
+                htmly = get_template('email/setPassword.html')
                 context = {'firstname': associated_users.firstname+' '
                            + associated_users.lastname, "absurl": absurl}
                 html_content = htmly.render(context)
@@ -181,6 +182,33 @@ class RequestPasswordResetView(View):
 
 class SetPasswordResetView(View):
     template_name = 'auth/setPassword.html'
+    error_template = 'auth/setPassword.html'
 
     def get(self, request):
-        return render(request, self.template_name)
+        token = request.GET.get('token')
+        try:
+            jwt.decode(token, settings.SECRET_KEY, algorithms='HS256')
+            return render(request, self.template_name)
+        except jwt.ExpiredSignatureError:
+            return render(request, self.error_template, context={'message': 'Token Has Expired'})
+        except jwt.exceptions.DecodeError:
+            return render(request, self.error_template, context={'message': 'Invalid Token'})
+
+    def post(self, request, format=None):
+        try:
+            token = request.POST.get('token')
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms='HS256')
+            # Change Password
+            associated_users = User.objects.get(id=payload['user_id'])
+            associated_users.is_verified = True
+            associated_users.set_password(escape(strip_tags(request.POST.get('password', ''))))
+            associated_users.save()
+            data = {'status': status.HTTP_200_OK, 'msg': 'Password Changed, Redirecting.'}
+            return HttpResponse(json.dumps(data))
+        except jwt.ExpiredSignatureError:
+            data = {'status': status.HTTP_401_UNAUTHORIZED, 'msg': 'Token Has Expired.'}
+            return HttpResponse(json.dumps(data))
+        except jwt.exceptions.DecodeError:
+            data = {'status': status.HTTP_401_UNAUTHORIZED,
+                    'msg': 'Invalid Token.'}
+            return HttpResponse(json.dumps(data))

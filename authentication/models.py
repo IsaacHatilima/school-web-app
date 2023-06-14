@@ -78,5 +78,9 @@ class User(AbstractBaseUser, PermissionsMixin):
             'access': str(refresh.access_token)
         }
 
+    def get_staff_names(self):
+        profile = Profile.objects.get(user=self.id)
+        return profile.firstname+' '+profile.lastname
+
     class Meta:
         db_table = "users"

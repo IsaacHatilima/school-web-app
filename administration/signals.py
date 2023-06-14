@@ -12,7 +12,6 @@ from authentication.models import User
 @receiver(post_save, sender=User)
 def user_created(sender, instance, created, **kwargs):
     if created:
-        print(instance.id)
         user = User.objects.get(id=instance.id)
         TokenLifeTime = datetime.timedelta(minutes=30)
         if user:
