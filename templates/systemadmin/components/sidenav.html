@@ -6,34 +6,13 @@
                     <span class="menu-title" data-i18n="">Dashboard</span>
                 </a>
             </li>
-            <li class=" navigation-header">
-                <span>User Managment</span><i class=" ft-minus" data-toggle="tooltip" data-placement="right"
-                    data-original-title="Others"></i>
-            </li>
             <li class=" nav-item"><a href="#"><i class="ft-users"></i><span class="menu-title"
-                        data-i18n="">Staff</span></a>
+                        data-i18n="">User Management</span></a>
                 <ul class="menu-content">
                     <li class="{% if is_makeStaff %} active {% endif %}"><a class="menu-item" href="{% url 'admin_make_staff' %}">Create</a>
                     </li>
-                    <li class="{% if is_listStaff %} active {% endif %}"><a class="menu-item" href="{% url 'admin_list_staff' %}">View</a>
-                    </li>
+                    
                 </ul>
-            </li>
-            <li class=" nav-item"><a href="#"><i class="ft-users"></i><span class="menu-title" data-i18n="">Parents</span></a>
-                <ul class="menu-content">
-                    <li><a class="menu-item" href="dashboard-ecommerce.html">Create</a>
-                    </li>
-                    <li class=""><a class="menu-item" href="dashboard-analytics.html">View</a>
-                    </li>
-                </ul>
-            </li>
-
-            <li class=" navigation-header">
-                <span>Others</span><i class=" ft-minus" data-toggle="tooltip" data-placement="right"
-                    data-original-title="Others"></i>
-            </li>
-            <li class="{% if is_depts %} active {% endif %} nav-item">
-                <a href="{% url 'admin_departments' %}"><i class="fa fa-bookmark-o"></i><span class="menu-title" data-i18n="">Departments</span></a>
             </li>
 
             <li class="{% if is_settings %} active {% endif %} nav-item">

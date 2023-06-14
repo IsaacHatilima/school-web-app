@@ -105,7 +105,7 @@ DATABASES = {
     }
 }
 
-DEFAULT_FROM_EMAIL = 'CHIKOLO <'+str(os.getenv('EMAIL_HOST_USER'))+'>'
+DEFAULT_FROM_EMAIL = 'Farming Scheam <'+str(os.getenv('EMAIL_HOST_USER'))+'>'
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = os.getenv('EMAIL_SERVER')
 EMAIL_USE_TLS = True
