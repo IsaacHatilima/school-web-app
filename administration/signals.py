@@ -4,6 +4,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.template.loader import get_template
 from django.core.mail import EmailMessage
 import os
+from django.conf import settings
 import datetime
 from django.urls import reverse
 from authentication.models import User
@@ -25,6 +26,6 @@ def user_created(sender, instance, created, **kwargs):
             msg = EmailMessage(subject='Account Verification',
                                body=html_content,
                                to=[user.email],
-                               from_email=os.environ['EMAIL_HOST_USER'])
+                               from_email=settings.DEFAULT_FROM_EMAIL)
             msg.content_subtype = 'html'
             msg.send()

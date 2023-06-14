@@ -31,16 +31,16 @@ class SettingsView(LoginRequiredMixin, View):
     redirect_field_name = 'next'
 
     def get(self, request):
-        two_fa = User.objects.get(id=request.user.id)
-        if two_fa.is_two_fa:
-            auth_state = 'checked'
-        else:
-            auth_state = ''
-        context = {
-            'is_settings': True,
-            'two_fa': auth_state
-        }
-        return render(request, self.template_name, context)
+        # two_fa = User.objects.get(id=request.user.id)
+        # if two_fa.is_two_fa:
+        #     auth_state = 'checked'
+        # else:
+        #     auth_state = ''
+        # context = {
+        #     'is_settings': True,
+        #     'two_fa': auth_state
+        # }
+        return render(request, self.template_name)
 
 
 class StaffManagerView(LoginRequiredMixin, View):
