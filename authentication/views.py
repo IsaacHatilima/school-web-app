@@ -69,52 +69,6 @@ class LoginView(View):
         return HttpResponse(json.dumps(data))
 
 
-class TwoFAView(View):
-    template_name = 'auth/twofa.html'
-
-    def get(self, request):
-        remember_me = request.session.get('remember_me')
-        next_url = request.session.get('next')
-        context = {"remember_me": remember_me, "next_url": next_url}
-        return render(request, self.template_name, context)
-
-    def post(self, request, format=None):
-        two_fa_code = escape(strip_tags(request.POST.get('auth_code', '')))
-        validUser = User.objects.get(two_fa=two_fa_code,
-                                     email=request.session.get('email'))
-        if validUser:
-            if validUser.is_active:
-                if validUser.is_verified:
-                    auth_login(request, validUser)
-                    remember = request.POST.get('remember_me')
-                    if remember:
-                        settings.SESSION_EXPIRE_AT_BROWSER_CLOSE = False
-                    else:
-                        settings.SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-                    data = {
-                        'status': status.HTTP_200_OK,
-                        'msg': 'Login Successful.',
-                        'login_type': 'With 2FA',
-                        'destination': reverse('admin_home'),
-                        'url': request.POST.get('next')
-                    }
-                    validUser.two_fa = ''
-                    validUser.save()
-                    del request.session['email']
-                    del request.session['remember_me']
-                    del request.session['next']
-                else:
-                    data = {'status': status.HTTP_401_UNAUTHORIZED,
-                            'msg': 'Your account is not verified.'}
-            else:
-                data = {'status': status.HTTP_401_UNAUTHORIZED,
-                        'msg': 'Your account has been disabled.'}
-        else:
-            data = {'status': status.HTTP_403_FORBIDDEN,
-                    'msg': 'Invalid Code.'}
-        return HttpResponse(json.dumps(data))
-
-
 class RequestPasswordResetView(View):
     template_name = 'auth/forgotPassword.html'
 

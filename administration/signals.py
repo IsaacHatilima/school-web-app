@@ -21,6 +21,8 @@ def user_created(sender, instance, created, **kwargs):
             absurl = os.environ['APP_URL']+reverse('auth_set_password')+"?token="+str(token)
             htmly = get_template('emailTemplates/verifyAccount.html')
             context = {'firstname': instance.profile.firstname,
+                       'username': instance.username,
+                       'email': instance.email,
                        'absurl': absurl}
             html_content = htmly.render(context)
             msg = EmailMessage(subject='Account Verification',
