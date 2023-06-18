@@ -52,7 +52,7 @@
                                                 <label for="projectinput2">Email<span style="font-size: small;"
                                                         class="danger">*</span></label>
                                                 <input type="text" id="email" class="form-control email-inputmask"
-                                                    value="{{staff.user.email}}" name="email" readonly />
+                                                    value="{{user.email}}" name="email" readonly />
                                             </div>
                                         </div>
                                     </div>
@@ -78,7 +78,7 @@
                                                         class="danger">*</span> <span style="font-size: small;">(Minimum
                                                         5 characters)</span></label>
                                                 <input type="text" id="username" class="form-control"
-                                                    value="{{staff.user.email}}" name="username" readonly/>
+                                                    value="{{user.username}}" name="username" readonly/>
                                                     <input type="text" id="user_id" hidden class="form-control" value="{{staff.public_key}}" name="user_id" readonly />
                                             </div>
                                         </div>
@@ -87,23 +87,11 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="projectinput1">Department<span style="font-size: small;"
-                                                        class="danger">*</span></label>
-                                                <select class="form-control" name="department" id="department" required>
-                                                    {% for department in dept %}
-                                                        <option value="{{department.public_key}}" {% if staff.department_of.id == department.id %} selected {% endif %}>
-                                                        {{department.department}}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
                                                 <label for="projectinput1">User Role<span style="font-size: small;"
                                                         class="danger">*</span></label>
                                                 <select class="form-control" name="role" id="role_{{member.public_key}}" required>
-                                                    {% for role in staff.user.ROLE_CHOICES %}
-                                                    <option value="{{role.0}}" {% if role.0 == staff.user.role %} selected {% endif %}>{{role.0}}</option>
+                                                    {% for role in request.user.ROLE_CHOICES %}
+                                                    <option value="{{role.0}}" {% if role.0 == user.role %} selected {% endif %}>{{role.0}}</option>
                                                     {% endfor %}
                                                 </select>
                                             </div>
@@ -128,5 +116,54 @@
 {% endblock %}
 
 {% block page_scripts %}
-<script src="{% static 'logic/admin/createStaff.js' %}" type="text/javascript"></script>
+<script>
+    $('#update_staff').submit(function (e) {
+            e.preventDefault();
+            //Get User ID for URL
+            let userID = $('#user_id').val();
+            // Disable Submit Button
+            document.getElementById("updateBTN").disabled = true;
+            // Switch button icon to loading Icon
+            $("#BTNIcon").removeClass("fa-save").addClass("fa-spinner fa-pulse fa-fw");
+            // Get input value
+            var form = $(this);
+            // Make payload
+            $.ajax({
+                url: '{% url "admin_staff_update" public_key=0 %}'.replace('0', userID),
+                data: form.serialize(),
+                type: "POST",
+                dataType: "json",
+                headers: {
+                    content_type: 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                success: function (data) {
+                    if (data) {
+                        var status = data.status
+                        var message = data.msg
+                        if (status === 200) {
+                            toastr.success(message, 'Success', { "closeButton": true, "showMethod": "slideDown", "hideMethod": "fadeOut", timeOut: 2000 });
+                            $("#BTNIcon").removeClass("fa-spinner fa-pulse fa-fw").addClass("fa-save");
+                            document.getElementById("updateBTN").disabled = false;
+                            setTimeout(function () {
+                                window.location.href = admin_make_list;
+                            }, 2300);
+
+                        }
+                        else {
+                            toastr.warning(message, 'Warning', { "closeButton": true, "showMethod": "slideDown", "hideMethod": "fadeOut", timeOut: 2000 });
+                            $("#BTNIcon").removeClass("fa-spinner fa-pulse fa-fw").addClass("fa-save");
+                            document.getElementById("updateBTN").disabled = false;
+                        }
+                    }
+                },
+                error: function () {
+                    toastr.error('Internal Server Error!', 'Error', { "closeButton": true, "showMethod": "slideDown", "hideMethod": "fadeOut", timeOut: 2000 });
+                    $("#BTNIcon").removeClass("fa-spinner fa-pulse fa-fw").addClass("fa-save");
+                    document.getElementById("updateBTN").disabled = false;
+                }
+            });
+        })
+
+</script>
 {% endblock %}

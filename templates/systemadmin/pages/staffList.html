@@ -40,14 +40,14 @@
                                     <tbody>
                                         {% for member in staff %}
                                         <tr>
-                                            <td>{{member.firstname}} {{member.lastname}}</td>
-                                            <td>{{member.user}}</td>
-                                            <td>+{{member.cell}}</td>
-                                            <td>{{member.marital_status}}</td>
-                                            <td>{{member.department_of}}</td>
-                                            <td>{{member.user.created_at}}</td>
+                                            <td>{{member.profile.firstname}} {{member.profile.lastname}}</td>
+                                            <td>{{member.email}}</td>
+                                            <td>+{{member.profile.cell}}</td>
+                                            <td>{{member.profile.marital_status}}</td>
+                                            <td>{{member.role}}</td>
+                                            <td>{{member.created_at}}</td>
                                             <td>
-                                                <a href="{{ member.get_absolute_url }}"><i class="fa fa-eye"></i></a>
+                                                <a href="{{ member.profile.get_absolute_url }}"><i class="fa fa-eye"></i></a>
                                             </td>
                                         </tr>
                                         {% endfor %}

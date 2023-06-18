@@ -86,55 +86,57 @@ class StaffManagerView(LoginRequiredMixin, View):
         return HttpResponse(json.dumps(data))
 
 
-# class StaffListView(LoginRequiredMixin, View):
-#     template_name = 'systemadmin/pages/staffList.html'
-#     login_url = '/'
-#     redirect_field_name = 'next'
+class StaffListView(LoginRequiredMixin, View):
+    template_name = 'systemadmin/pages/staffList.html'
+    login_url = '/'
+    redirect_field_name = 'next'
 
-#     def get(self, request):
-#         # instance = StaffProfile.objects.all()
-#         context = {
-#             'is_listStaff': True,
-#             'staff': 'instance',
-#         }
-#         return render(request, self.template_name, context)
+    def get(self, request):
+        instance = User.objects.all()
+        context = {
+            'is_listStaff': True,
+            'staff': instance,
+        }
+        return render(request, self.template_name, context)
 
 
-# class StaffUpdateView(LoginRequiredMixin, View):
-#     template_name = 'systemadmin/pages/updateStaff.html'
-#     login_url = '/'
-#     redirect_field_name = 'next'
+class StaffUpdateView(LoginRequiredMixin, View):
+    template_name = 'systemadmin/pages/updateStaff.html'
+    login_url = '/'
+    redirect_field_name = 'next'
 
-#     def get(self, request, public_key):
-#         instance = StaffProfile.objects.get(public_key=public_key)
-#         dept = Department.objects.all()
-#         context = {
-#             'is_listStaff': True,
-#             'staff': instance,
-#             'dept': dept
-#         }
-#         return render(request, self.template_name, context)
+    def get(self, request, public_key):
+        instance = Profile.objects.get(public_key=public_key)
+        user = User.objects.get(profile=instance)
+        context = {
+            'is_listStaff': True,
+            'staff': instance,
+            'user': user
+        }
+        return render(request, self.template_name, context)
 
-#     def post(self, request, public_key):
-#         public_key = escape(strip_tags(request.POST.get('user_id', '')))
-#         first_name = escape(strip_tags(request.POST.get('fname', '')))
-#         last_name = escape(strip_tags(request.POST.get('lname', '')))
-#         cell = escape(strip_tags(request.POST.get('cell', '')))
-#         marital_status = escape(strip_tags(request.POST.get('marital_status', '')))
-#         dept = escape(strip_tags(request.POST.get('department', '')))
-#         role = escape(strip_tags(request.POST.get('role', '')))
-#         try:
-#             profile = StaffProfile.objects.get(public_key=public_key)
-#             profile.firstname = first_name
-#             profile.last_name = last_name
-#             profile.cell = cell
-#             profile.marital_status = marital_status
-#             profile.dept = dept
-#             profile.role = role
-#             profile.save()
-#             data = {'status': status.HTTP_200_OK,
-#                     'msg': 'Account Updated Successfuly.'}
-#         except StaffProfile.DoesNotExist:
-#             data = {'status': status.HTTP_404_NOT_FOUND,
-#                     'msg': 'Account Not Found.'}
-#         return HttpResponse(json.dumps(data))
+    def post(self, request, public_key):
+        public_key = escape(strip_tags(request.POST.get('user_id', '')))
+        first_name = escape(strip_tags(request.POST.get('fname', '')))
+        last_name = escape(strip_tags(request.POST.get('lname', '')))
+        cell = escape(strip_tags(request.POST.get('cell', '')))
+        marital_status = escape(strip_tags(request.POST.get('marital_status', '')))
+        role = escape(strip_tags(request.POST.get('role', '')))
+        try:
+            # Update Profile
+            profile = Profile.objects.get(public_key=public_key)
+            profile.firstname = first_name
+            profile.last_name = last_name
+            profile.cell = cell
+            profile.marital_status = marital_status
+            profile.save()
+            # Update User Role
+            user = User.objects.get(profile=profile)
+            user.role = role
+            user.save()
+            data = {'status': status.HTTP_200_OK,
+                    'msg': 'Account Updated Successfuly.'}
+        except Profile.DoesNotExist:
+            data = {'status': status.HTTP_404_NOT_FOUND,
+                    'msg': 'Account Not Found.'}
+        return HttpResponse(json.dumps(data))
