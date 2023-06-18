@@ -118,8 +118,17 @@
                 $("#msg").html('Redirecting, Please Wait...');
                 $("#notify").removeClass("alert-info alert-warning alert-danger").addClass("alert-success");
                 setTimeout(function () {
-                  window.location.href = destination;
-                }, 2500);
+                  if(window.location.href == 'http://127.0.0.1:8000/'){
+                    // New session redirect
+                    window.location.href = destination;
+                  }
+                  else{
+                    //Interupted session redirect
+                    url = window.location.href
+                    window.location.href = url.split("=/").pop()
+                  }
+                  
+                }, 2200);
 
               }
               else if (status === 403) {
