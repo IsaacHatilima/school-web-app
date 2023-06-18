@@ -33,7 +33,12 @@ class LoginView(View):
             return render(request, self.template_name)
 
     def post(self, request, format=None):
-        user = authenticate(email=escape(strip_tags(request.POST.get('email', ''))),
+        username_email = escape(strip_tags(request.POST.get('email', '')))
+        if '@' in username_email:
+            validUser = User.objects.get(email=username_email)
+        else:
+            validUser = User.objects.get(username=username_email)
+        user = authenticate(email=validUser.email,
                             password=escape(strip_tags(request.POST.get('password', ''))))
         if user:
             if user.is_active:
