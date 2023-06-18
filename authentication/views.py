@@ -136,3 +136,12 @@ class SetPasswordResetView(View):
             data = {'status': status.HTTP_401_UNAUTHORIZED,
                     'msg': 'Invalid Token.'}
             return HttpResponse(json.dumps(data))
+
+
+class UpdatePasswordView(View):
+    def post(self, request, format=None):
+        associated_users = User.objects.get(id=request.user.id)
+        associated_users.set_password(escape(strip_tags(request.POST.get('password', ''))))
+        associated_users.save()
+        data = {'status': status.HTTP_200_OK, 'msg': 'Password Changed, Redirecting.'}
+        return HttpResponse(json.dumps(data))

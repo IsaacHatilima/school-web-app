@@ -25,24 +25,6 @@ def page_not_found(request, exception):
     return render(request, '404.html')
 
 
-class SettingsView(LoginRequiredMixin, View):
-    template_name = 'public/settings.html'
-    login_url = '/'
-    redirect_field_name = 'next'
-
-    def get(self, request):
-        # two_fa = User.objects.get(id=request.user.id)
-        # if two_fa.is_two_fa:
-        #     auth_state = 'checked'
-        # else:
-        #     auth_state = ''
-        # context = {
-        #     'is_settings': True,
-        #     'two_fa': auth_state
-        # }
-        return render(request, self.template_name)
-
-
 class StaffManagerView(LoginRequiredMixin, View):
     template_name = 'systemadmin/pages/createStaff.html'
     login_url = '/'
@@ -140,3 +122,12 @@ class StaffUpdateView(LoginRequiredMixin, View):
             data = {'status': status.HTTP_404_NOT_FOUND,
                     'msg': 'Account Not Found.'}
         return HttpResponse(json.dumps(data))
+
+
+class UpdatePasswordView(LoginRequiredMixin, View):
+    template_name = 'public/updatePassword.html'
+    login_url = '/'
+    redirect_field_name = 'next'
+
+    def get(self, request):
+        return render(request, self.template_name)
